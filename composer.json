@@ -1,0 +1,21 @@
+{
+  "name": "wenruns/form",
+  "description": "Customize laravel-admin's form control registration control",
+  "type": "library",
+  "authors": [
+    {
+      "name": "wenruns",
+      "email": "1562194488@qq.com"
+    }
+  ],
+  "require": {
+  },
+  "require-dev": {
+  },
+  "scripts": {
+    "register-control-controller": [
+      "Wenruns\\Form\\RegisterControl::handle"
+    ]
+  }
+}
+

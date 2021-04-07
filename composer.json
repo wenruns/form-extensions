@@ -2,6 +2,19 @@
   "name": "wenruns/form",
   "description": "Customize laravel-admin's form control registration control",
   "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/wenruns/wen-grid.git",
+  "keywords": [
+    "Form",
+    "表单组件",
+    "多功能表单",
+    "表单列表",
+    "下拉查询选择组件",
+    "树状复选框组件",
+    "多级下拉复选框组件",
+    "tab标签切换组件",
+    "Form表单组件"
+  ],
   "authors": [
     {
       "name": "wenruns",
@@ -16,6 +29,11 @@
     "register-control-controller": [
       "Wenruns\\Form\\RegisterControl::handle"
     ]
+  },
+  "autoload": {
+    "psr-4": {
+      "Wenruns\\Form\\": "src/"
+    }
   }
 }
 

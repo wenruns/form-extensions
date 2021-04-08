@@ -107,10 +107,13 @@ class TableList
      */
     public function getColumnLen()
     {
-        return count($this->columns);
+        return count($this->columns) + ($this->showButton ? 1 : 0);
     }
 
-
+    /**
+     * @param $value
+     * @return $this
+     */
     public function default($value)
     {
         $this->defaultValues = $value;
@@ -163,14 +166,25 @@ class TableList
             return '';
         }
         $this->buttonEvent(true);
+        $number = count($this->multiList->getOptions());
+
+        $oneRowHtml = $this->getOneRowHtml();
+
+        $oneRowHtml = $this->compressHtml($oneRowHtml);
+//        $oneRowHtml = str_replace('\/', '/', $oneRowHtml);
+        $oneRowHtml = str_replace('/', '\/', $oneRowHtml);
+        $oneRowHtml = str_replace('\\\\`', '\\`', $oneRowHtml);
+
         return <<<HTML
 <th >
-    <span class="btn btn-xs btn-success table-list-btn-{$this->getUniqueKey()}" data-type="add">
+    <span class="btn btn-sm btn-success table-list-btn-add-{$this->getUniqueKey()}" data-type="add" data-number="{$number}">
         <i class="fa fa-edit fa-fw"></i>新增
     </span>
+    <script>var oneRowHtml{$this->getUniqueKey()} = `{$oneRowHtml}`</script>
 </th>
 HTML;
     }
+
 
     /**
      * @return string
@@ -183,78 +197,108 @@ HTML;
         $this->buttonEvent();
         return <<<HTML
 <td>
-    <span class="btn btn-xs btn-danger table-list-btn-{$this->getUniqueKey()}" data-type="remove">
+    <span class="btn btn-sm btn-danger table-list-btn-remove-{$this->getUniqueKey()}" data-type="remove">
         <i class="fa fa-remove fa-fw"></i>移除
     </span>
 </td>
 HTML;
     }
 
+    /**
+     * @param bool $addBtn
+     * @return $this
+     */
     protected function buttonEvent($addBtn = false)
     {
         $eventClosure = $this->buttonEventClosure ? $this->buttonEventClosure : 0;
-        $number = count($this->multiList->getOptions());
-        $emptyBody = str_replace('/', '\/', $this->compressHtml($this->multiList->emptyBody()));
-        $oneRowHtml = '';
-        if ($addBtn) {
-            $oneRowHtml = $this->getOneRowHtml();
-//            $path = 'E:\wens\CompanyProject\bkqw_loan.cc\test.html';
-//            file_put_contents($path, $oneRowHtml);
-            $oneRowHtml = str_replace('/', '\/', $this->compressHtml($oneRowHtml));
-        }
+        $addBtn ? $this->addEvent($eventClosure) : $this->removeEvent($eventClosure);
+        return $this;
+    }
+
+    /**
+     * @param $eventClosure
+     * @return $this
+     */
+    protected function addEvent($eventClosure)
+    {
+        $btnClass = 'table-list-btn-add-' . $this->getUniqueKey();
+        $replaceStr = MultiList::SYMBOL_BEGIN . $this->getKeyVariableName() . MultiList::SYMBOL_END;
         $script = <<<SCRIPT
 $(function(){
-    var number_{$this->getUniqueKey()} = $number;
-    $(document).on("click", ".table-list-btn-{$this->getUniqueKey()}", function(e){
-        var fn = {$eventClosure};
-        if(!fn){
-            fn  = function(type, e){
-                var parentColumn = '{$this->parentColumn}';
-                if(type == 'add'){
-                    var oneRowHtml = `{$oneRowHtml}`.replace(/@{$this->getKeyVariableName()}@/mg, number_{$this->getUniqueKey()});
-                    number_{$this->getUniqueKey()}++;
-                    Array.from(e.currentTarget.parentElement.parentElement.parentElement.parentElement.children).forEach(function(item, k){
-                        if(item.tagName == 'TBODY'){
-                            if(item.dataset.empty){
-                                item.innerHTML = "";
-                                item.removeAttribute("data-empty")
+    $(document).on("click", ".{$btnClass}", function(e){
+        var oneRowHtml = oneRowHtml{$this->getUniqueKey()}.replace(/{$replaceStr}/mg, e.currentTarget.dataset.number).replace(/\\\"/gm, '"').replace(/\\\\"/mg,'\"').replace(/<\\\\\//mg, "</");
+        e.currentTarget.dataset.number++;
+        Array.from(e.currentTarget.parentElement.parentElement.parentElement.parentElement.children).forEach(function(item, k){
+            if(item.tagName == 'TBODY'){
+                if(item.dataset.empty){
+                    item.innerHTML = "";
+                    item.removeAttribute("data-empty")
+                }
+                var table = document.createElement("table");
+                table.innerHTML = oneRowHtml;
+                function addTd(td){
+                    console.log(td, table);
+                    item.append(td);
+                    var script = td.querySelectorAll("script");
+                    if(script){
+                        Array.from(script).forEach(function(v){
+                            try{
+                                eval(v.innerHTML);
+                            }catch(e){
+                                console.error(e);
                             }
-                            var table = document.createElement("table");
-                            table.innerHTML = oneRowHtml;
-                            var children = table.children[0] ? table.children[0].children : null; 
-                            if(children){
-                                Array.from(children).forEach(function(vo){
-                                    item.append(vo);
-                                    var script = vo.querySelectorAll("script");
-                                    if(script){
-                                        Array.from(script).forEach(function(v){
-                                            console.log(v.innerHTML);
-                                            eval(v.innerHTML);
-                                        });
-                                    }
-                                })
-                            }
-                           
-                        }
-                    });
-                }else{
-                    function remove(ele){
-                        if(ele.nextSibling && ele.nextSibling.dataset && ele.nextSibling.dataset.sub == 'true'){
-                            remove(ele.nextSibling);
-                        }
-                        ele.remove();
-                    }
-                    var parent = e.currentTarget.parentElement.parentElement.parentElement;
-                    console.log(e, parent);
-                    remove(e.currentTarget.parentElement.parentElement);
-                    if(parent && Array.from(parent.children).length == 0){
-                        parent.innerHTML = `{$emptyBody}`;
-                        parent.setAttribute("data-empty","true");
+                        });
                     }
                 }
+                Array.from(table.children).forEach(function(child){
+                    if(child.tagName == "TBODY"){
+                        Array.from(child.children).forEach(function(vo){
+                            addTd(vo);
+                        });
+                    }else if(child.tagName == "TD"){
+                        addTd(child);
+                    }
+                });
             }
+        });
+        if({$eventClosure}){
+            var fn = {$eventClosure};
+            fn.call(this, e.currentTarget.dataset.type, e);
         }
-        fn.call(this, e.currentTarget.dataset.type, e);
+    });
+});
+SCRIPT;
+        Admin::script($script);
+        return $this;
+    }
+
+    /**
+     * @param $eventClosure
+     * @return $this
+     */
+    protected function removeEvent($eventClosure)
+    {
+        $emptyBody = str_replace('/', '\/', $this->compressHtml($this->multiList->emptyBody()));
+        $btnClass = 'table-list-btn-remove-' . $this->getUniqueKey();
+        $script = <<<SCRIPT
+$(function(){
+    $(document).on("click", ".{$btnClass}", function(e){
+        function remove(ele){
+            if(ele.nextElementSibling && ele.nextElementSibling.dataset && ele.nextElementSibling.dataset.sub == 'true'){
+                remove(ele.nextElementSibling);
+            }
+            ele.remove();
+        }
+        var parent = e.currentTarget.parentElement.parentElement.parentElement;
+        remove(e.currentTarget.parentElement.parentElement);
+        if(parent && Array.from(parent.children).length == 0){
+            parent.innerHTML = `{$emptyBody}`;
+            parent.setAttribute("data-empty","true");
+        }
+        if({$eventClosure}){
+            var fn = {$eventClosure};
+            fn.call(this, e.currentTarget.dataset.type, e);
+        }
     });
 })
 SCRIPT;
@@ -277,7 +321,9 @@ SCRIPT;
         return $this;
     }
 
-
+    /**
+     * @return int|string
+     */
     public function getKeyVariableName()
     {
         return $this->getUniqueKey();
@@ -285,7 +331,6 @@ SCRIPT;
 
 
     /**
-     * @param bool $createEmpty
      * @return string
      */
     public function tableListBody()
@@ -310,7 +355,9 @@ SCRIPT;
         return $bodyContent;
     }
 
-
+    /**
+     * @return string
+     */
     public function getOneRowHtml()
     {
         return $this->createEmpty(true)->keyIsVariable(true)->tableListBody();
@@ -325,17 +372,26 @@ SCRIPT;
         return $this->tbodyEnd() . $this->tableEnd();
     }
 
-
+    /**
+     * @return string
+     */
     public function trStart()
     {
         return '<tr>';
     }
 
+    /**
+     * @return string
+     */
     public function trEnd()
     {
         return '</tr>';
     }
 
+    /**
+     * @param bool $empty
+     * @return string
+     */
     public function tbodyStart($empty = false)
     {
         if ($empty) {
@@ -344,49 +400,77 @@ SCRIPT;
         return '<tbody>';
     }
 
+    /**
+     * @return string
+     */
     public function tbodyEnd()
     {
         return '</tbody>';
     }
 
+    /**
+     * @return string
+     */
     public function theadStart()
     {
         return '<thead>';
     }
 
+    /**
+     * @return string
+     */
     public function theadEnd()
     {
         return '</thead>';
     }
 
+    /**
+     * @return string
+     */
     public function tableStart()
     {
         $key = $this->multiList->getUniqueKey();
         return '<table class="table table-hover" id="grid-table-' . $key . $this->getUniqueKey() . '">';
     }
 
+    /**
+     * @return string
+     */
     public function tableEnd()
     {
         return '</table>';
     }
 
-
+    /**
+     * @param BaseColumn $column
+     * @return string
+     */
     public function thStart(BaseColumn $column)
     {
         return '<th style="width:' . $column->width . '" class="">';
     }
 
+    /**
+     * @return string
+     */
     public function thEnd()
     {
         return '</th>';
     }
 
 
+    /**
+     * @param Field $field
+     * @return string
+     */
     public function tdStart(Field $field)
     {
         return '<td class="' . $field->getClass() . '">';
     }
 
+    /**
+     * @return string
+     */
     public function tdEnd()
     {
         return '</td>';

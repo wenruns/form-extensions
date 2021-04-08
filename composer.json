@@ -3,7 +3,7 @@
   "description": "Customize laravel-admin's form control registration control",
   "type": "library",
   "license": "MIT",
-  "homepage": "https://github.com/wenruns/form-extensions.git",
+  "homepage": "https://github.com/wenruns/wen-grid.git",
   "keywords": [
     "Form",
     "表单组件",

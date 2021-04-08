@@ -16,6 +16,11 @@ class MultiList extends Field
 {
     use CommonMethods;
 
+    const SYMBOL_BEGIN = 'QAQ';
+    
+    const SYMBOL_END = 'QAQ';
+
+
     /**
      * 视图
      * @var string
@@ -290,7 +295,7 @@ class MultiList extends Field
         if ($this->disableEmpty) {
             return '';
         }
-        $colspan = $this->getTableList()->getColumnLen() + ($this->showButton ? 1 : 0);
+        $colspan = $this->getTableList()->getColumnLen();
 
         return <<<HTML
 <tr>
@@ -367,13 +372,13 @@ HTML;
     }
 
     /**
-     * @param $jsEventClosure
+     * @param null $jsCallback
      * @return $this
      */
-    public function showButton($jsEventClosure = null)
+    public function showButton($jsCallback = null)
     {
         $this->showButton = true;
-        $this->jsEventClosure = $jsEventClosure;
+        $this->jsEventClosure = $jsCallback;
         return $this;
     }
 

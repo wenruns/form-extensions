@@ -9,18 +9,18 @@
 namespace Wenruns\Form\Extensions\MultiList;
 
 
-use App\Admin\Extensions\Form\MultiList\Field\Color;
-use App\Admin\Extensions\Form\MultiList\Field\Date;
-use App\Admin\Extensions\Form\MultiList\Field\Display;
-use App\Admin\Extensions\Form\MultiList\Field\Expand;
-use App\Admin\Extensions\Form\MultiList\Field\Hidden;
-use App\Admin\Extensions\Form\MultiList\Field\Modal;
-use App\Admin\Extensions\Form\MultiList\Field\MultiSelect;
-use App\Admin\Extensions\Form\MultiList\Field\Number;
-use App\Admin\Extensions\Form\MultiList\Field\PowerSwitch;
-use App\Admin\Extensions\Form\MultiList\Field\Select;
-use App\Admin\Extensions\Form\MultiList\Field\Text;
-use App\Admin\Extensions\Form\MultiList\Field\TextArea;
+use Wenruns\Form\Extensions\MultiList\Field\Color;
+use Wenruns\Form\Extensions\MultiList\Field\Date;
+use Wenruns\Form\Extensions\MultiList\Field\Display;
+use Wenruns\Form\Extensions\MultiList\Field\Expand;
+use Wenruns\Form\Extensions\MultiList\Field\Hidden;
+use Wenruns\Form\Extensions\MultiList\Field\Modal;
+use Wenruns\Form\Extensions\MultiList\Field\MultiSelect;
+use Wenruns\Form\Extensions\MultiList\Field\Number;
+use Wenruns\Form\Extensions\MultiList\Field\PowerSwitch;
+use Wenruns\Form\Extensions\MultiList\Field\Select;
+use Wenruns\Form\Extensions\MultiList\Field\Text;
+use Wenruns\Form\Extensions\MultiList\Field\TextArea;
 
 trait CommonMethods
 {

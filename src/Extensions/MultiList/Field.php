@@ -420,7 +420,7 @@ SCRIPT;
     {
         $key = $this->columnInstance->key;
         if ($this->keyIsVariable) {
-            $key = '@' . $this->keyVariableName . '@';
+            $key = MultiList::SYMBOL_BEGIN . $this->keyVariableName . MultiList::SYMBOL_END;
         }
         if (empty($this->class)) {
             $this->class = str_replace('[', '-', str_replace(']', '', $this->parentColumn))
@@ -452,7 +452,7 @@ SCRIPT;
         }
         $key = $this->columnInstance->key;
         if ($this->keyIsVariable) {
-            $key = '@' . $this->keyVariableName . '@';
+            $key = MultiList::SYMBOL_BEGIN . $this->keyVariableName . MultiList::SYMBOL_END;
         }
         if ($this->parentColumn) {
             $this->name = $this->parentColumn . '[' . $key . '][' . $this->column . ']';
@@ -485,7 +485,7 @@ SCRIPT;
     {
         $key = $this->columnInstance->key;
         if ($this->keyIsVariable) {
-            $key = '@' . $this->keyVariableName . '@';
+            $key = MultiList::SYMBOL_BEGIN . $this->keyVariableName . MultiList::SYMBOL_END;
         }
         if (empty($this->subName)) {
             if ($this->parentColumn) {

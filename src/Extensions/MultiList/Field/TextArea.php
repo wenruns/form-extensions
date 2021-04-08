@@ -27,7 +27,7 @@ HTML;
     {
         // TODO: Implement buildEmpty() method.
         return <<<HTML
-<textarea rows="5" id="{$this->getClass()}" class="form-control {$this->getClass()}" name="{$this->getName()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}></textarea>
+<textarea rows="5" id="{$this->getClass()}" class="form-control {$this->getClass()}" name="{$this->getName()}" placeholder="输入{$this->getPlaceholder()}" disabled {$this->buildAttribute()}></textarea>
 HTML;
     }
 }

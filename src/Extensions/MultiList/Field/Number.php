@@ -38,17 +38,17 @@ HTML;
         // TODO: Implement buildEmpty() method.
         return <<<HTML
 <div style="width: 100%;{$this->style}">
-    <input style="text-align: center;" type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>
-    <script>
-        $(function(){
-            $('input.{$this->getClass()}:not(.initialized)').addClass('initialized').bootstrapNumber({
-                upClass: 'success',
-                downClass: 'primary',
-                center: true
-            });
-        })
-    </script>
+    <input style="text-align: center;" type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" disabled class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>
 </div>
+<span style="display: none;" class="script-content" data-class="{$this->getClass()}">
+    $(function(){
+        $('input.{$this->getClass()}:not(.initialized)').addClass('initialized').bootstrapNumber({
+            upClass: 'success',
+            downClass: 'primary',
+            center: true
+        });
+    })
+</span>
 HTML;
     }
 

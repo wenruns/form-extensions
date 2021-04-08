@@ -39,7 +39,7 @@ HTML;
     <span class="grid-expand" data-toggle="modal" data-target="#grid-modal-{$this->getClass()}">
         <a href="javascript:void(0)"><i class="fa fa-clone"></i>&nbsp;&nbsp;</a>
     </span>
-    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" class="form-control text" placeholder="{$this->getPlaceholder()}" />
+    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" disabled value="" class="form-control text" placeholder="{$this->getPlaceholder()}" />
 </div>
 HTML;
     }

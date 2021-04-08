@@ -40,7 +40,7 @@ HTML;
 <div class="form-group" style="padding: 0px 0px 0px 15px; width: 100%;{$this->style}">
     <span class="grid-expand-grid-row" data-inserted="0" data-key="{$this->getClass()}" data-toggle="collapse" data-target="#grid-collapse-{$this->getClass()}" aria-expanded="false" style="display: flex;">
         <a href="javascript:void(0)" style="display: flex;"><i class="fa fa-angle-double-down"></i>&nbsp;&nbsp;</a>
-        <input type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" placeholder="{$this->getPlaceholder()}" class="form-control text" />
+        <input type="text" id="{$this->getClass()}" name="{$this->getName()}" disabled value="" placeholder="{$this->getPlaceholder()}" class="form-control text" />
     </span>
 </div>
 HTML;

@@ -18,7 +18,7 @@ class Hidden extends Field
     {
         // TODO: Implement build() method.
         return <<<HTML
-<input {$this->buildAttribute()} id="{$this->getClass()}" type="hidden" name="{$this->getName()}" value="{$this->getValue()}" placeholder="{$this->label}" style="display: none;" />
+<input id="{$this->getClass()}" type="hidden" name="{$this->getName()}" value="{$this->getValue()}" placeholder="{$this->label}" style="display: none;" {$this->buildAttribute()} />
 HTML;
     }
 
@@ -26,7 +26,7 @@ HTML;
     {
         // TODO: Implement buildEmpty() method.
         return <<<HTML
-<input {$this->buildAttribute()} id="{$this->getClass()}" type="hidden" name="{$this->getName()}" value="" placeholder="{$this->getPlaceholder()}" style="display: none;" />
+<input id="{$this->getClass()}" type="hidden" name="{$this->getName()}" disabled value="" placeholder="{$this->getPlaceholder()}" style="display: none;" {$this->buildAttribute()} />
 HTML;
     }
 

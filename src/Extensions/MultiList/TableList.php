@@ -167,20 +167,12 @@ class TableList
         }
         $this->buttonEvent(true);
         $number = count($this->multiList->getOptions());
-
-        $oneRowHtml = $this->getOneRowHtml();
-
-        $oneRowHtml = $this->compressHtml($oneRowHtml);
-//        $oneRowHtml = str_replace('\/', '/', $oneRowHtml);
-        $oneRowHtml = str_replace('/', '\/', $oneRowHtml);
-        $oneRowHtml = str_replace('\\\\`', '\\`', $oneRowHtml);
-
         return <<<HTML
 <th >
     <span class="btn btn-sm btn-success table-list-btn-add-{$this->getUniqueKey()}" data-type="add" data-number="{$number}">
         <i class="fa fa-edit fa-fw"></i>新增
     </span>
-    <script>var oneRowHtml{$this->getUniqueKey()} = `{$oneRowHtml}`</script>
+    <table style="display: none">{$this->getOneRowHtml()}</table>
 </th>
 HTML;
     }
@@ -223,42 +215,64 @@ HTML;
     {
         $btnClass = 'table-list-btn-add-' . $this->getUniqueKey();
         $replaceStr = MultiList::SYMBOL_BEGIN . $this->getKeyVariableName() . MultiList::SYMBOL_END;
+        $reg = MultiList::SYMBOL_BEGIN . '.+' . MultiList::SYMBOL_END;
         $script = <<<SCRIPT
 $(function(){
     $(document).on("click", ".{$btnClass}", function(e){
-        var oneRowHtml = oneRowHtml{$this->getUniqueKey()}.replace(/{$replaceStr}/mg, e.currentTarget.dataset.number).replace(/\\\"/gm, '"').replace(/\\\\"/mg,'\"').replace(/<\\\\\//mg, "</");
-        e.currentTarget.dataset.number++;
-        Array.from(e.currentTarget.parentElement.parentElement.parentElement.parentElement.children).forEach(function(item, k){
-            if(item.tagName == 'TBODY'){
-                if(item.dataset.empty){
-                    item.innerHTML = "";
-                    item.removeAttribute("data-empty")
-                }
-                var table = document.createElement("table");
-                table.innerHTML = oneRowHtml;
-                function addTd(td){
-                    console.log(td, table);
-                    item.append(td);
-                    var script = td.querySelectorAll("script");
-                    if(script){
-                        Array.from(script).forEach(function(v){
-                            try{
-                                eval(v.innerHTML);
-                            }catch(e){
-                                console.error(e);
-                            }
-                        });
+        function appendContent(oneRowHtml){
+            oneRowHtml = oneRowHtml.replace(/{$replaceStr}/mg, e.currentTarget.dataset.number);
+            e.currentTarget.dataset.number++;
+            Array.from(e.currentTarget.parentElement.parentElement.parentElement.parentElement.children).forEach(function(item, k){
+                if(item.tagName == 'TBODY'){
+                    if(item.dataset.empty){
+                        item.innerHTML = "";
+                        item.removeAttribute("data-empty")
                     }
-                }
-                Array.from(table.children).forEach(function(child){
-                    if(child.tagName == "TBODY"){
-                        Array.from(child.children).forEach(function(vo){
-                            addTd(vo);
-                        });
-                    }else if(child.tagName == "TD"){
-                        addTd(child);
+                    var table = document.createElement("table");
+                    table.innerHTML = oneRowHtml;
+                    
+                    function addTd(tr){
+                        item.append(tr);
+                        var inputs = tr.querySelectorAll(".table.table-hover>tbody [name]");
+                        if(inputs){
+                            Array.from(inputs).forEach(function(v){
+                                console.log(v.attributes.name.value);
+                                var res = /{$reg}/.test(v.attributes.name.value);
+                                if(!res){
+                                    v.removeAttribute("disabled")                                
+                                }
+                            });
+                        }
+                        var script = tr.querySelectorAll(".script-content");
+                        if(script){
+                            Array.from(script).forEach(function(v){
+                                console.log(v.dataset.class);
+                                var res = /{$reg}/.test(v.dataset.class);
+                                if(!res){
+                                    try{
+                                        eval(v.innerHTML);
+                                    }catch(e){
+                                        console.error(e);
+                                    }
+                                }
+                            });
+                        }
                     }
-                });
+                    Array.from(table.children).forEach(function(child){
+                        if(child.tagName == "TBODY"){
+                            Array.from(child.children).forEach(function(vo){
+                                addTd(vo);
+                            });
+                        }else if(child.tagName == "TR"){
+                            addTd(child);
+                        }
+                    });
+                }
+            });
+        }
+        Array.from(e.currentTarget.nextElementSibling.children).forEach(function(item){
+            if(item.tagName == "TBODY"){
+                appendContent(item.innerHTML);
             }
         });
         if({$eventClosure}){

@@ -56,9 +56,9 @@ HTML;
         return <<<HTML
 <div class="input-group" style="width: 100%;{$this->style}">
     <input {$this->buildAttribute()} type="checkbox" class="{$this->getClass()} la_checkbox" />
-    <input hidden class="{$this->getClass()}" id="{$this->getClass()}" name="{$this->getName()}" value="" {$this->buildAttribute()} />
+    <input hidden class="{$this->getClass()}" id="{$this->getClass()}" name="{$this->getName()}" value="" disabled {$this->buildAttribute()} />
 </div>
-<script>
+<span class="script-content" style="display: none;" data-class="{$this->getClass()}">
     $(function(){
         $(".{$this->getClass()}.la_checkbox").bootstrapSwitch({
             size:"auto",
@@ -75,7 +75,7 @@ HTML;
             },
         });
     });
-</script>
+</span>
 HTML;
     }
 

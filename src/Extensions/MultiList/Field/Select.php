@@ -48,9 +48,9 @@ HTML;
         }
         return <<<HTML
 <div style="width: 100%;{$this->style}" class="input-group">
-    <select class="form-control {$this->getClass()} select2-hidden-accessible" id="{$this->getClass()}" name="{$this->getName()}" data-value="" tabindex="-1" aria-hidden="true" data-placeholder="{$this->getPlaceholder()}" style="width:100%;" {$this->buildAttribute()}>{$optionStr}</select>
+    <select class="form-control {$this->getClass()} select2-hidden-accessible" id="{$this->getClass()}" name="{$this->getName()}" data-value="" tabindex="-1" aria-hidden="true" data-placeholder="{$this->getPlaceholder()}" style="width:100%;" disabled {$this->buildAttribute()}>{$optionStr}</select>
 </div>
-<script>
+<span class="script-content" style="display: none" data-class="{$this->getClass()}">
     $(function(){
         $("select.{$this->getClass()}").select2({
             "allowClear":true,
@@ -60,7 +60,7 @@ HTML;
             },
         });
     })
-</script>
+</span>
 HTML;
     }
 

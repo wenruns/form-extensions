@@ -33,7 +33,7 @@ HTML;
         return <<<HTML
 <div class="input-group" style="width: 100%;{$this->style}">
     <span class="input-group-addon" style="display: {$this->hideIconBool};"><i class="fa fa-pencil fa-fw"></i></span>
-    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" class="form-control text" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>        
+    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" disabled value="" class="form-control text" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>        
 </div>
 HTML;
     }

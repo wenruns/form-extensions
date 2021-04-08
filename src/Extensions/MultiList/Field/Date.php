@@ -44,15 +44,15 @@ HTML;
         return <<<HTML
 <div class="input-group" style="position: relative;width: 100%;{$this->style}">
     <span class="input-group-addon" ><i class="fa fa-calendar fa-fw"></i></span>
-    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>
-    <script>
-        $(function(){
-            let width_{$key} = 'auto';
-            let height_{$key} = 'auto';
-            $("input.{$this->getClass()}").parent().datetimepicker({"format":"{$format}","locale":"zh-CN","allowInputToggle":true});
-        });
-    </script>
+    <input type="text" id="{$this->getClass()}" name="{$this->getName()}" disabled value="" class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>
 </div>
+<span style="display: none;" class="script-content" data-class="{$this->getClass()}">
+    $(function(){
+        let width_{$key} = 'auto';
+        let height_{$key} = 'auto';
+        $("input.{$this->getClass()}").parent().datetimepicker({"format":"{$format}","locale":"zh-CN","allowInputToggle":true});
+    });
+</span>
 HTML;
     }
 }

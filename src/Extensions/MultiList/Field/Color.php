@@ -36,14 +36,14 @@ HTML;
         return <<<HTML
 <div class="input-group colorpicker-element" style="width: 100%;">
     <span class="input-group-addon"><i style="background-color: {$this->getValue()};"></i></span> 
-    <input style="{$this->style}" type="text" id="{$this->getClass()}" name="{$this->getName()}" value="" class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>            
+    <input style="{$this->style}" type="text" id="{$this->getClass()}" name="{$this->getName()}" disabled value="" class="form-control {$this->getClass()}" placeholder="输入{$this->getPlaceholder()}" {$this->buildAttribute()}>            
 </div>
-<script>
+<span style="display: none;" class="script-content" data-class="{$this->getClass()}">
     $(function(){
         $("input.{$this->getClass()}").parent().colorpicker([]);
         $(".colorpicker.dropdown-menu").css("z-index", 9999999);
     })
-</script>
+</span>
 HTML;
 
     }
